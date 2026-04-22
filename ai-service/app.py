@@ -1,10 +1,14 @@
 # Import Flask class from flask package
 from flask import Flask
 
+# Import the describe blueprint
+from routes.describe import describe_bp
+
 # Create Flask application object
 app = Flask(__name__)
 
-
+# Register the /describe route
+app.register_blueprint(describe_bp)
 
 # Create a simple route to check if server is running
 @app.route('/health')
