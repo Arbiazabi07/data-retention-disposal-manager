@@ -48,6 +48,7 @@ def describe():
 
     # Created a temporary description manually
     
+    
     description = (
         f"{record_type} with {risk_level} risk should be securely retained for "
         f"{retention_period} before disposal."
