@@ -6,6 +6,7 @@ from routes.describe import describe_bp
 
 from routes.recommend import recommend_bp
 
+from routes.report import report_bp
 
 # Create Flask application object
 app = Flask(__name__)
@@ -13,6 +14,7 @@ app = Flask(__name__)
 # Register the /describe route
 app.register_blueprint(describe_bp)
 app.register_blueprint(recommend_bp)
+app.register_blueprint(report_bp) 
 
 # Create a simple route to check if server is running
 @app.route('/health')
