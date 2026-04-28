@@ -68,12 +68,21 @@ public class DataRecordController {
         return ResponseEntity.ok(dataRecordService.updateRecord(id, request));
     }
 
+    
     @DeleteMapping("/{id}")
-    @Operation(summary = "Soft-delete a record")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<Map<String, String>> deleteRecord(@PathVariable Long id) {
-        dataRecordService.deleteRecord(id);
-        return ResponseEntity.ok(Map.of("message", "Record successfully disposed"));
+       dataRecordService.deleteRecord(id);
+       return ResponseEntity.ok(Map.of("message", "Record successfully disposed"));
+    }
+
+    // Add an admin-only endpoint for hard management
+    @DeleteMapping("/{id}/permanent")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Permanently delete a record (admin only)")
+       public ResponseEntity<Map<String, String>> permanentDelete(@PathVariable Long id) {
+       dataRecordService.permanentDelete(id);
+       return ResponseEntity.ok(Map.of("message", "Record permanently removed"));
     }
 
     @GetMapping("/search")

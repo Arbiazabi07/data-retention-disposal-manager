@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +32,7 @@ public class DataRecordService {
                 .map(this::toResponse);
     }
 
+    @Cacheable(value = "records", key = "#id")
     public DataRecordResponse getRecordById(Long id) {
         DataRecord record = dataRecordRepository
                 .findByIdAndIsDeletedFalse(id)
@@ -37,6 +41,7 @@ public class DataRecordService {
     }
 
     @Transactional
+    @CacheEvict(value = {"records", "stats"}, allEntries = true)
     public DataRecordResponse createRecord(DataRecordRequest request) {
         validateRequest(request);
 
@@ -61,6 +66,10 @@ public class DataRecordService {
     }
 
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(value = "records", key = "#id"),
+        @CacheEvict(value = "stats", allEntries = true)
+    })
     public DataRecordResponse updateRecord(Long id, DataRecordRequest request) {
         DataRecord record = dataRecordRepository
                 .findByIdAndIsDeletedFalse(id)
@@ -83,6 +92,10 @@ public class DataRecordService {
     }
 
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(value = "records", key = "#id"),
+        @CacheEvict(value = "stats", allEntries = true)
+    })
     public void deleteRecord(Long id) {
         DataRecord record = dataRecordRepository
                 .findByIdAndIsDeletedFalse(id)
@@ -104,6 +117,7 @@ public class DataRecordService {
                 .map(this::toResponse);
     }
 
+    @Cacheable(value = "stats")
     public Map<String, Long> getStats() {
         long total = dataRecordRepository.countByIsDeletedFalse();
         long active = dataRecordRepository.countByStatusAndIsDeletedFalse("ACTIVE");
