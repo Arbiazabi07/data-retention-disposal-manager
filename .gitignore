@@ -1,0 +1,9 @@
+.env
+backend/target/
+frontend/node_modules/
+ai-service/__pycache__/
+ai-service/chroma_data/
+*.class
+*.log
+.idea/
+*.iml

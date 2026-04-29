@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Data Record Expiry Reminder</title>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .header { background-color: #1B4F8A; color: white; padding: 16px; }
+        .content { padding: 16px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Data Retention Expiry Alert</h2>
+    </div>
+    <div class="content">
+        <p>The following data records are expiring within the next 30 days:</p>
+        <table>
+            <tr>
+                <th>Record Name</th>
+                <th>Data Type</th>
+                <th>Owner</th>
+                <th>Expiry Date</th>
+            </tr>
+            <tr th:each="record : ${records}">
+                <td th:text="${record.name}">Name</td>
+                <td th:text="${record.dataType}">Type</td>
+                <td th:text="${record.owner}">Owner</td>
+                <td th:text="${record.expiryDate}">Date</td>
+            </tr>
+        </table>
+        <p>Please review and take appropriate disposal action.</p>
+    </div>
+</body>
+</html>
