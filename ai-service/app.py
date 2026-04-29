@@ -1,45 +1,51 @@
-# Import Flask class from flask package
+# Import Flask class
 from flask import Flask
 
-# Import the describe blueprint
-from routes.describe import describe_bp
+# Import cache from extensions (correct way)
+from extensions import cache
 
-from routes.recommend import recommend_bp
-
-from routes.report import report_bp
-
-# Create Flask application object
+# Create Flask application
 app = Flask(__name__)
 
-# Register the /describe route
+# Configure cache
+app.config['CACHE_TYPE'] = 'SimpleCache'
+app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # 5 minutes
+
+# Initialize cache with app
+cache.init_app(app)
+
+
+# Import routes AFTER app creation (important)
+from routes.describe import describe_bp
+from routes.recommend import recommend_bp
+from routes.report import report_bp
+
+# Register routes
 app.register_blueprint(describe_bp)
 app.register_blueprint(recommend_bp)
-app.register_blueprint(report_bp) 
+app.register_blueprint(report_bp)
 
-# Create a simple route to check if server is running
+
+# Health check route
 @app.route('/health')
 def health():
-
-    # Return JSON response
     return {
         "status": "working"
     }
+
+
+# Add security headers
 @app.after_request
 def add_security_headers(response):
-    
-    # Prevent clickjacking
+
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-    
-    # Prevent MIME sniffing
     response.headers['X-Content-Type-Options'] = 'nosniff'
-    
-    # Enable basic XSS protection
     response.headers['X-XSS-Protection'] = '1; mode=block'
-    
-    # Control content sources
     response.headers['Content-Security-Policy'] = "default-src 'self'"
-    
+
     return response
-# Start Flask server
+
+
+# Run server
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
