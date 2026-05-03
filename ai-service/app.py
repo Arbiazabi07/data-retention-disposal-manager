@@ -1,7 +1,7 @@
 # Import Flask class
 from flask import Flask
 
-# Import cache from extensions (correct way)
+# Import cache from extensions
 from extensions import cache
 
 # Create Flask application
@@ -11,8 +11,17 @@ app = Flask(__name__)
 app.config['CACHE_TYPE'] = 'SimpleCache'
 app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # 5 minutes
 
-# Initialize cache with app
+# Initialize cache
 cache.init_app(app)
+
+
+# 🔹 Simulate model loading (Flask 3 compatible)
+def load_model():
+    print("AI Model loaded successfully...")
+
+
+# Call it once at startup
+load_model()
 
 
 # Import routes AFTER app creation (important)
